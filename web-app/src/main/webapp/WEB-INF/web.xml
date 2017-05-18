@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+
+    <welcome-file-list>
+        <welcome-file>index</welcome-file>
+    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>ErrorHandlerController</servlet-name>
+        <servlet-class>com.webprojectpattern.eshop.controller.ErrorHandlerController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErrorHandlerController</servlet-name>
+        <url-pattern>/errorHandler</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type >
+        <location>/errorHandler</location>
+    </error-page>
+
+
+    <filter>
+        <filter-name>DeltaTimeFilter</filter-name>
+        <filter-class>com.webprojectpattern.eshop.filter.DeltaTimeFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>DeltaTimeFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter>
+        <filter-name>LocaleFilter</filter-name>
+        <filter-class>com.webprojectpattern.eshop.filter.LocaleFilter</filter-class>
+        <init-param>
+            <param-name>En</param-name>
+            <param-value>en</param-value>
+        </init-param>
+        <init-param>
+            <param-name>Ru</param-name>
+            <param-value>ru</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>LocaleFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <session-config>
+        <session-timeout>1</session-timeout>
+    </session-config>
+
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jspf</url-pattern>
+        </jsp-property-group>
+    </jsp-config>
+
+    <context-param>
+        <param-name>ApplicationContext</param-name>
+        <param-value>applicationContext.xml</param-value>
+    </context-param>
+
+</web-app>

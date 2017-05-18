@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/jdbc
+       http://www.springframework.org/schema/jdbc/spring-jdbc.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:property-placeholder location="mysql.properties"/>
+
+    <!--<jdbc:embedded-database id="dataSource" type="HSQL">-->
+        <!--<jdbc:script location="classpath:db.sql/schema.sql"/>-->
+        <!--<jdbc:script location="classpath:db.sql/data.sql"/>-->
+    <!--</jdbc:embedded-database>-->
+
+    <bean id="dataSource" class="com.webprojectpattern.eshop.dao.transactionManager.c3p0DataSource" scope="singleton" init-method="init" destroy-method="close">
+        <property name="driverClass" value="${driver}"/>
+        <property name="jdbcUrl" value="${jdbcUrl}"/>
+        <property name="user" value="${user}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+    <bean id="txManager" class="com.webprojectpattern.eshop.dao.transactionManager.TransactionManagerImpl" scope="prototype">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean id="userDao" class="com.webprojectpattern.eshop.dao.impl.UserDaoImpl" scope="prototype" >
+        <property name="dataSource" ref="txManager"/>
+    </bean>
+    <bean id="userValidatorImpl" class="com.webprojectpattern.eshop.system.validator.UserValidatorImpl" scope="prototype">
+        <property name="usernamePattern" value="^[A-Za-z0-9_-]{3,15}$"/>
+        <property name="passwordPattern" value="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[`~!@#$%^&amp;*()_+-={}|\';,./:?]).{6,20}$"/>
+        <property name="emailPattern" value="^[a-zA-Z0-9_!#$%&amp;’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$"/>
+    </bean>
+    <bean id="userValidatorForAuthor" class="com.webprojectpattern.eshop.system.validator.UserValidatorForAuthor" scope="prototype" />
+    <bean id="user" class="com.webprojectpattern.eshop.entity.User" scope="prototype" />
+
+    <bean id="productDao" class="com.webprojectpattern.eshop.dao.impl.ProductDaoImpl" scope="prototype" >
+        <property name="dataSource" ref="txManager"/>
+    </bean>
+    <bean id="product" class="com.webprojectpattern.eshop.entity.Product" scope="prototype" />
+    <bean id="groupDao" class="com.webprojectpattern.eshop.dao.impl.GroupDaoImpl" scope="prototype" >
+        <property name="dataSource" ref="txManager"/>
+    </bean>
+    <bean id="group" class="com.webprojectpattern.eshop.entity.Group" scope="prototype" />
+
+</beans>

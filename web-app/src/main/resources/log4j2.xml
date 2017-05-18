@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logPath">C://JavaLesson/logging_for_web_app</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="fileLogger"
+                     fileName="${logPath}/theMainFileLog.log"
+                     filePattern="${logPath}/theMainFileLogPattern.log">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy />
+            </Policies>
+        </RollingFile>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!--<Logger name="" level="trace">-->
+            <!--<AppenderRef ref="fileLogger"/>-->
+        <!--</Logger>-->
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="fileLogger"/>
+        </Root>
+    </Loggers>
+</Configuration>

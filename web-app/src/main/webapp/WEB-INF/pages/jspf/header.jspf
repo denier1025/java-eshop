@@ -1,0 +1,62 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page session="true" %>
+<fmt:setLocale value="${pageContext.request.locale}" />
+<fmt:setBundle basename="entries" />
+
+<form method="post" action="">
+    <fmt:message key="Language" />:<select name="lang">
+        <option>--<fmt:message key="Select" />--</option>
+        <c:forEach var="locale" items="${locales}">
+            <option>${locale}</option>
+        </c:forEach>
+    </select>
+    <input type="submit" value="<fmt:message key="Choose" />" />
+</form>
+<%--<c:set var="user" value="${user.username}"/>--%>
+<c:choose>
+    <c:when test="${user ne null}">
+        <fmt:message key="Hello" />, <a href="/account/${user.id}"><c:out value="${user.username}" /></a>.
+    </c:when>
+    <c:otherwise>
+        <c:set var="errorMapForAuthor" value="${errorMapForAuthor}"/>
+        <c:choose>
+            <c:when test="${errorMapForAuthor eq null}">
+                <form method="post" action="/signIn">
+                    <fmt:message key="Username" />:<input type="text" name="username"/>
+                    <fmt:message key="Password" />:<input type="password" name="password"/>
+                    <fmt:message key="Remember_me" /><input type="checkbox" name="remember" value="yes"/>
+                    <input type="submit" value="<fmt:message key="Sign_In" />" />
+                </form>
+            </c:when>
+            <c:otherwise>
+                <c:set var="username" value="${param.username}"/>
+                <c:set var="password" value="${param.password}"/>
+                <form method="post" action="/signIn">
+                    <c:if test="${errorMapForAuthor['username'] eq username}">
+                        <fmt:message key="Username" />:<input type="text" name="username" value="${errorMapForAuthor['username']}" />
+                    </c:if>
+                    <c:if test="${errorMapForAuthor['username'] ne username}">
+                        <fmt:message key="Username" />:<input type="text" name="username" value="" /><fmt:message key="${errorMapForAuthor['username']}" />
+                    </c:if>
+                    <c:if test="${errorMapForAuthor['password'] eq password}">
+                        <fmt:message key="Password" />:<input type="password" name="password" value="${errorMapForAuthor['password']}" />
+                    </c:if>
+                    <c:if test="${errorMapForAuthor['password'] ne password}">
+                        <fmt:message key="Password" />:<input type="password" name="password" value="" /><fmt:message key="${errorMapForAuthor['password']}" />
+                    </c:if>
+                    <fmt:message key="Remember_me" /><input type="checkbox" name="remember" value="yes"/>
+                    <input type="submit" value="<fmt:message key="Sign_In" />" />
+                </form>
+            </c:otherwise>
+        </c:choose>
+    </c:otherwise>
+</c:choose>
+<c:choose>
+    <c:when test="${user ne null}">
+        <a href="/signOut"><fmt:message key="Sign_Out" /></a>
+    </c:when>
+    <c:otherwise>
+        <a href="/signUp"><fmt:message key="Sign_Up" /></a>
+    </c:otherwise>
+</c:choose>
